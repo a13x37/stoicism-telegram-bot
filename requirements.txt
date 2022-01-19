@@ -1,0 +1,6 @@
+flask
+requests
+psycopg2-binary
+bs4
+schedule
+datetime
