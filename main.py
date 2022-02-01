@@ -1,21 +1,27 @@
 import os
 import json
-import db
 import time
 import datetime
-import random
-import schedule
 import threading
-from flask import Flask, request
-from phrases import phrases
-from config import BOT_TOKEN, APP_URL
-from methods import BotHandler
-from handler import start, menu, start_keyboard, phrase_request_keyboard, about_keyboard, articles_keyboard
-from parser_html_page import parser_page
+import traceback
 
+import schedule
+from flask import Flask, request
+
+from methods import BotHandler, Db, parser_page
+from handler import start, menu, start_keyboard, phrase_request_keyboard, about_keyboard, articles_keyboard
+
+
+BOT_TOKEN = os.environ['TOKEN']
+APP_URL = os.environ['APP_URL'] + BOT_TOKEN
 
 bot = BotHandler(BOT_TOKEN)
+db = Db()
+
+
 server = Flask(__name__)
+server.config['DEBUG'] = True
+
 dt = datetime.datetime.now()
 
 
@@ -65,7 +71,9 @@ stop_run_continuously = run_continuously()
 
 
 def phrase_request():
-    return random.choice(phrases)
+    data = db.get_random_quote()
+    phrase = "{} \n*{}*".format(data[0], data[1])
+    return phrase
 
 
 offset = 0
@@ -179,10 +187,11 @@ def main():
                 reply_markup=json.dumps(articles_keyboard)
             )
 
-        db.update_last_seen(dt, update['chat_id'])
+        db.update_last_seen(update['chat_id'])
 
     except Exception as e:
         print(e)
+        traceback.print_exc()
         time.sleep(1)
     return "OK"
 
