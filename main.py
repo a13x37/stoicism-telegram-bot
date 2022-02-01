@@ -20,7 +20,7 @@ db = Db()
 
 
 server = Flask(__name__)
-server.config['DEBUG'] = True
+# server.config['DEBUG'] = True
 
 dt = datetime.datetime.now()
 
