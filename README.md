@@ -14,7 +14,7 @@ Deployed on Heroku.
 - Short description of philosophy, several articles
 
 ## Available languages 
-Russian is available
+Russian is available  
 English is coming soon
 
 
